@@ -80,7 +80,7 @@ const Navbar = () => {
         !right-0 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 max-sm:!p-4 bg-light transition-all duration-300 z-50 
         ${open ? "max-sm:translate-x-0" : "max-sm:translate-x-full"}`}
       >
-        {displayLinks.map((link, index) => (
+        {displayLinks.map((link, index) =>
           link.isAction ? (
             <button
               key={index}
@@ -97,8 +97,8 @@ const Navbar = () => {
             >
               {link.name}
             </Link>
-          )
-        ))}
+          ),
+        )}
 
         {/* Role Action + Auth Button */}
         <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
