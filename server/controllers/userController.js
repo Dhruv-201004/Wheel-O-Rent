@@ -220,3 +220,48 @@ export const getAvailableLocations = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// Change user password
+export const changePassword = async (req, res) => {
+  try {
+    const { user } = req;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.json({ success: false, message: "All fields are required" });
+    }
+
+    if (newPassword.length < 8) {
+      return res.json({
+        success: false,
+        message: "Password must be at least 8 characters",
+      });
+    }
+
+    // Get user with password
+    const userWithPassword = await User.findById(user._id);
+    if (!userWithPassword) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(
+      currentPassword,
+      userWithPassword.password,
+    );
+    if (!isMatch) {
+      return res.json({
+        success: false,
+        message: "Current password is incorrect",
+      });
+    }
+
+    // Hash new password and update
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+
+    res.json({ success: true, message: "Password changed successfully" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};

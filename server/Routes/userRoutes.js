@@ -8,6 +8,7 @@ import {
   uploadProfileImage,
   updateUserName,
   getAvailableLocations,
+  changePassword,
 } from "../controllers/userController.js";
 import protect from "../middleware/auth.js";
 import maintenanceCheck from "../middleware/maintenanceCheck.js";
@@ -29,5 +30,6 @@ userRouter.post(
   uploadProfileImage,
 );
 userRouter.post("/update-name", protect, updateUserName);
+userRouter.post("/change-password", protect, changePassword);
 
 export default userRouter;

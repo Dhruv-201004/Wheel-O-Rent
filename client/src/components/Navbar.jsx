@@ -18,6 +18,7 @@ const Navbar = () => {
   } = useAppContext();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [profileDropdown, setProfileDropdown] = useState(false);
   const navigate = useNavigate();
 
   // Switch user role to owner
@@ -101,64 +102,137 @@ const Navbar = () => {
         )}
 
         {/* Role Action + Auth Button */}
-        <div className="flex max-sm:flex-col items-start sm:items-center gap-6">
+        <div className="flex max-sm:flex-col items-start sm:items-center gap-6 relative">
           {user && (
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              onClick={() => navigate("/profile")}
-              className="cursor-pointer w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-2 border-blue-500 hover:border-blue-600 transition-all"
-            >
-              {user.image ? (
-                <img
-                  src={user.image}
-                  alt={user.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <svg
-                  className="w-6 h-6 text-gray-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                    clipRule="evenodd"
+            <div className="relative">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                onClick={() => setProfileDropdown(!profileDropdown)}
+                className="cursor-pointer w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden border-2 border-blue-500 hover:border-blue-600 transition-all"
+              >
+                {user.image ? (
+                  <img
+                    src={user.image}
+                    alt={user.name}
+                    className="w-full h-full object-cover"
                   />
-                </svg>
+                ) : (
+                  <svg
+                    className="w-6 h-6 text-gray-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                )}
+              </motion.button>
+
+              {/* Profile Dropdown */}
+              {profileDropdown && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 top-12 bg-white rounded-lg shadow-lg border border-gray-200 z-50 w-48"
+                  onMouseLeave={() => setProfileDropdown(false)}
+                >
+                  <div className="p-3 border-b border-gray-200">
+                    <p className="text-sm font-semibold text-gray-900">
+                      {user.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
+                  </div>
+
+                  <div className="py-2">
+                    <button
+                      onClick={() => {
+                        navigate("/profile");
+                        setProfileDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      My Profile
+                    </button>
+
+                    {isOwner && (
+                      <button
+                        onClick={() => {
+                          navigate("/owner");
+                          setProfileDropdown(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M8 7h12M8 11h12m-12 4h12m2-12H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z"
+                          />
+                        </svg>
+                        My Dashboard
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="border-t border-gray-200 py-2">
+                    <button
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                        setProfileDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2 font-medium"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
               )}
-            </motion.button>
+            </div>
           )}
-          {isAdmin && (
-            <button
-              onClick={() => navigate("/admin")}
-              className="cursor-pointer !px-8 !py-2 bg-purple-600 hover:bg-purple-700 transition-all rounded-lg text-white"
-            >
-              Admin Panel
-            </button>
-          )}
-          {token && (
-            <button
-              onClick={() => (isOwner ? navigate("/owner") : changeRole())}
-              className="cursor-pointer"
-            >
-              {isOwner ? "Dashboard" : "List Cars"}
-            </button>
-          )}
-          {!token && (
+          {!user && !token && (
             <button
               onClick={() => setShowLogin(true)}
               className="cursor-pointer !px-8 !py-2 bg-primary hover:bg-primary-dull transition-all rounded-lg text-white"
             >
               Login
-            </button>
-          )}
-          {user && (
-            <button
-              onClick={logout}
-              className="cursor-pointer !px-6 !py-2 bg-red-500 hover:bg-red-600 transition-all rounded-lg text-white text-sm font-medium"
-            >
-              Logout
             </button>
           )}
         </div>
