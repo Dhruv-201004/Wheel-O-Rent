@@ -1,0 +1,94 @@
+import { useNavigate } from "react-router-dom";
+import { assets } from "../assets/assets";
+
+// Card component to display car details
+const CarCard = ({ car, isOwnCar = false }) => {
+  const currency = import.meta.env.VITE_CURRENCY;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!isOwnCar) {
+      navigate(`/car-details/${car._id}`);
+      scrollTo(0, 0);
+    }
+  };
+
+  return (
+    <div
+      onClick={handleClick}
+      className={`group rounded-xl overflow-hidden shadow-lg 
+                 transition-all duration-500 ${
+                   isOwnCar
+                     ? "opacity-60 cursor-not-allowed"
+                     : "hover:-translate-y-1 cursor-pointer"
+                 }`}
+    >
+      {/* Car image and availability badge */}
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={car.image}
+          alt="Car"
+          className="w-full h-full object-cover
+                     transition-transform duration-500 group-hover:scale-105"
+        />
+        {isOwnCar && (
+          <p className="absolute top-4 left-4 bg-yellow-500/90 !px-2.5 !py-1 rounded-full text-xs text-white font-medium">
+            Your Car
+          </p>
+        )}
+        {!isOwnCar && car.isAvailable && (
+          <p className="absolute top-4 left-4 bg-primary/90 !px-2.5 !py-1 rounded-full text-xs text-white">
+            Available Now
+          </p>
+        )}
+        {/* Price per day */}
+        <div
+          className="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm 
+                     text-white !px-3 !py-2 rounded-lg"
+        >
+          <span className="font-semibold">
+            {currency}
+            {car.pricePerDay}
+          </span>
+          <span className="text-sm text-white/80">/ day</span>
+        </div>
+      </div>
+
+      {/* Car details */}
+      <div className="!p-4 sm:!p-5">
+        <div className="flex items-start justify-between !mb-2">
+          <div>
+            <h3 className="text-lg font-medium">
+              {car.brand} {car.model}
+            </h3>
+            <p className="text-muted-foreground text-sm">
+              {car.category} &bull; {car.year}
+            </p>
+          </div>
+        </div>
+
+        {/* Specifications */}
+        <div className="!mt-4 grid grid-cols-2 gap-y-2 text-gray-600">
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.users_icon} alt="" className="h-4 !mr-2" />
+            <span>{car.seating_capacity} Seats</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.fuel_icon} alt="" className="h-4 !mr-2" />
+            <span>{car.fuel_type}</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.car_icon} alt="" className="h-4 !mr-2" />
+            <span>{car.transmission}</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.location_icon} alt="" className="h-4 !mr-2" />
+            <span>{car.location}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CarCard;
