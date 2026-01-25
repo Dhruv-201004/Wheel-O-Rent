@@ -186,16 +186,16 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center !p-3 sm:!p-4 md:!p-6 !py-6 md:!py-0">
+      <div className="w-full max-w-sm md:max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
         {/* Header with Back & Logout */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 !px-3 sm:!px-4 !py-2 sm:!py-3 flex items-center justify-between">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1 text-white hover:text-blue-200 transition-colors cursor-pointer"
           >
             <svg
-              className="w-5 h-5"
+              className="w-4 sm:w-5 h-4 sm:h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -207,9 +207,11 @@ export default function Profile() {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            <span className="text-sm font-medium">Back</span>
+            <span className="text-xs sm:text-sm font-medium">Back</span>
           </button>
-          <h1 className="text-lg font-bold text-white">My Profile</h1>
+          <h1 className="text-base sm:text-lg font-bold text-white">
+            My Profile
+          </h1>
           <button
             onClick={() => {
               logout();
@@ -217,9 +219,11 @@ export default function Profile() {
             }}
             className="flex items-center gap-1 text-white hover:text-red-200 transition-colors cursor-pointer"
           >
-            <span className="text-sm font-medium">Logout</span>
+            <span className="text-xs sm:text-sm font-medium hidden sm:inline">
+              Logout
+            </span>
             <svg
-              className="w-4 h-4"
+              className="w-4 sm:w-5 h-4 sm:h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -235,7 +239,7 @@ export default function Profile() {
         </div>
 
         {/* Profile Content */}
-        <div className="p-4 space-y-4">
+        <div className="!p-3 sm:!p-4 md:!p-6 space-y-3 md:space-y-4">
           {/* Profile Image */}
           <div className="flex justify-center">
             <div className="relative">

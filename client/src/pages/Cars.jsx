@@ -82,6 +82,20 @@ const Cars = () => {
       return;
     }
 
+    // Validate dates
+    const picked = new Date(filterPickupDate);
+    const returned = new Date(filterReturnDate);
+
+    if (isNaN(picked) || isNaN(returned)) {
+      toast.error("Invalid date format");
+      return;
+    }
+
+    if (returned <= picked) {
+      toast.error("Return date must be after pickup date");
+      return;
+    }
+
     pickupLocation = filterPickupLocation;
     pickupDate = filterPickupDate;
     returnDate = filterReturnDate;
@@ -124,16 +138,35 @@ const Cars = () => {
       // If there are search params, fetch available cars
       searchCarAvailability();
     } else {
-      // Show all cars from context first, then fetch from API if empty
-      if (cars.length > 0) {
-        setFilteredCars(cars);
-        setIsLoading(false);
+      // Filter out cars booked for today when no search params
+      const filterCarsForToday = async () => {
+        try {
+          const { data } = await axios.get("/api/bookings/today-bookings");
+          const todayBookedCarIds = data.success
+            ? data.bookings.map((booking) => booking.car)
+            : [];
+
+          const carsToShow = cars.length > 0 ? cars : filteredCars;
+          const availableCars = carsToShow.filter(
+            (car) => !todayBookedCarIds.includes(car._id),
+          );
+
+          setFilteredCars(availableCars);
+          setIsLoading(false);
+        } catch (error) {
+          setFilteredCars(cars.length > 0 ? cars : filteredCars);
+          setIsLoading(false);
+        }
+      };
+
+      if (cars.length > 0 || filteredCars.length > 0) {
+        filterCarsForToday();
       } else {
         // Fetch cars from API if not available in context
         fetchAllCars();
       }
     }
-  }, [pickupDate, pickupLocation, returnDate]);
+  }, [pickupDate, pickupLocation, returnDate, cars, axios]);
 
   // Apply local search filter when input changes
   useEffect(() => {
@@ -156,7 +189,7 @@ const Cars = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex flex-col items-center !py-10 bg-light max-md:!px-4"
+        className="flex flex-col items-center !py-6 sm:!py-8 md:!py-10 bg-light !px-4 sm:!px-6 md:!px-8"
       >
         <Title
           title="Available Cars"
@@ -168,7 +201,7 @@ const Cars = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex items-center bg-white !px-4 !mt-6 max-w-140 w-full h-12 rounded-full shadow"
+          className="flex items-center bg-white !px-3 sm:!px-4 !mt-4 sm:!mt-6 w-full sm:max-w-2xl md:max-w-2xl lg:max-w-3xl h-10 sm:h-12 rounded-full shadow"
         >
           <img src={assets.search_icon} alt="" className="w-4.5 h-4.5 !mr-2" />
           <input
@@ -204,10 +237,12 @@ const Cars = () => {
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="bg-white rounded-lg shadow-lg max-w-md w-full !p-6"
+            className="bg-white rounded-lg shadow-lg w-full sm:max-w-md !p-4 sm:!p-6 max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between !mb-4">
-              <h2 className="text-xl font-semibold">Modify Filters</h2>
+            <div className="flex items-center justify-between !mb-3 sm:!mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold">
+                Modify Filters
+              </h2>
               <button
                 onClick={() => setShowFilterModal(false)}
                 className="text-gray-500 hover:text-gray-700"
@@ -260,18 +295,18 @@ const Cars = () => {
               </div>
             </div>
 
-            <div className="flex gap-4 !mt-6">
+            <div className="flex flex-col sm:flex-row gap-3 !mt-4 sm:!mt-6">
               <button
                 onClick={handleClearFilters}
-                className="flex-1 !px-4 !py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="flex-1 !px-3 sm:!px-4 !py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
               >
-                Clear Filters
+                Clear
               </button>
               <button
                 onClick={handleApplyFilter}
-                className="flex-1 !px-4 !py-2 bg-primary text-white rounded-md hover:bg-primary-dull transition-colors"
+                className="flex-1 !px-3 sm:!px-4 !py-2 text-sm bg-primary text-white rounded-md hover:bg-primary-dull transition-colors"
               >
-                Apply Filters
+                Apply
               </button>
             </div>
           </motion.div>
@@ -283,12 +318,12 @@ const Cars = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="!px-6 md:!px-16 lg:!px-24 xl:!px-32 !mt-10"
+        className="!px-4 sm:!px-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32 !mt-6 sm:!mt-8 md:!mt-10"
       >
-        <p className="text-gray-500 xl:!px-20 max-w-7xl !mx-auto">
+        <p className="text-sm md:text-base text-gray-500 max-w-7xl !mx-auto">
           Showing {filteredCars.length} Cars
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 !mt-4 xl:!px-20 max-w-7xl !mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 !mt-4 md:!mt-6 max-w-7xl !mx-auto">
           {filteredCars.map((car, index) => {
             const isOwnCar = user && user._id === car.owner;
             return (

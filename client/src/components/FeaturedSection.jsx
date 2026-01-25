@@ -67,10 +67,7 @@ const FeaturedSection = () => {
   }, [allCars, axios]);
 
   return (
-    <motion.div
-      className="flex flex-col items-center  !py-24 !px-6 md:!px-16
-                 lg:!px-24 xl:!px-32"
-    >
+    <motion.div className="flex flex-col items-center !py-12 sm:!py-16 md:!py-24 !px-4 sm:!px-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32">
       {/* Section heading */}
       <motion.div>
         <Title

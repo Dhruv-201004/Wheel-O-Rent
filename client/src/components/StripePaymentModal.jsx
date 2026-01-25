@@ -158,11 +158,13 @@ const StripePaymentModal = ({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-xl shadow-2xl max-w-md w-full !p-6"
+        className="bg-white rounded-xl shadow-2xl max-w-md w-full !p-4 sm:!p-6 my-4 sm:my-0 max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
-        <div className="flex justify-between items-center !mb-6">
-          <h2 className="text-2xl font-semibold">Complete Payment</h2>
+        <div className="flex justify-between items-center !mb-4 sm:!mb-6">
+          <h2 className="text-xl sm:text-2xl font-semibold">
+            Complete Payment
+          </h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
@@ -172,7 +174,7 @@ const StripePaymentModal = ({
         </div>
 
         {/* Booking Details */}
-        <div className="bg-gray-50 rounded-lg !p-4 !mb-6">
+        <div className="bg-gray-50 rounded-lg !p-3 sm:!p-4 !mb-4 sm:!mb-6">
           <div className="flex justify-between !mb-3">
             <span className="text-gray-600">Car:</span>
             <span className="font-semibold">{carData?.name}</span>
@@ -216,7 +218,7 @@ const StripePaymentModal = ({
         )}
 
         {/* Security Note */}
-        <p className="text-xs text-center text-gray-500 !mt-4">
+        <p className="text-xs text-center text-gray-500 !mt-3 sm:!mt-4">
           🔒 Your payment is secured by Stripe
         </p>
       </motion.div>

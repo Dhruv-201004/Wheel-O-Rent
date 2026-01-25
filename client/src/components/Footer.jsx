@@ -14,7 +14,7 @@ const Footer = () => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="!p-6 md:!px-16 lg:!px-24 xl:!px-32 !mt-60 text-sm text-gray-500 bg-light border-t border-borderColor"
+      className="!p-4 sm:!p-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32 !mt-32 sm:!mt-40 md:!mt-60 text-xs sm:text-sm text-gray-500 bg-light border-t border-borderColor"
     >
       {/* Top section: Logo, description, social links, and navigation */}
       <motion.div
@@ -177,7 +177,6 @@ const Footer = () => {
         <p className="text-gray-500">
           © {new Date().getFullYear()} Wheel-O-Rent. All rights reserved.
         </p>
-        
       </motion.div>
     </motion.div>
   );

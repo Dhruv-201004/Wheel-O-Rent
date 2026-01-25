@@ -6,10 +6,15 @@ const stripe = new Stripe(process.env.STRIPE_SEC_KEY);
 
 /** Check if a car is available for a given date range */
 export const checkAvailability = async (car, pickupDate, returnDate) => {
+  // Convert string dates (YYYY-MM-DD) to Date objects at start of day (UTC)
+  const picked = new Date(pickupDate + "T00:00:00Z");
+  const returned = new Date(returnDate + "T00:00:00Z");
+
   const bookings = await Booking.find({
     car,
-    pickupDate: { $lte: returnDate },
-    returnDate: { $gte: pickupDate },
+    pickupDate: { $lt: returned }, // pickup < return date
+    returnDate: { $gt: picked }, // return > pickup date
+    status: { $ne: "cancelled" }, // exclude cancelled bookings
   });
   return bookings.length === 0;
 };
@@ -20,6 +25,21 @@ export const checkAvailabilityOfCars = async (req, res) => {
     const { location, pickupDate, returnDate } = req.body;
     if (!location || !pickupDate || !returnDate) {
       return res.json({ success: false, message: "Missing required fields" });
+    }
+
+    // Validate date format and logic
+    const picked = new Date(pickupDate + "T00:00:00Z");
+    const returned = new Date(returnDate + "T00:00:00Z");
+
+    if (isNaN(picked) || isNaN(returned)) {
+      return res.json({ success: false, message: "Invalid date format" });
+    }
+
+    if (returned <= picked) {
+      return res.json({
+        success: false,
+        message: "Return date must be after pickup date",
+      });
     }
 
     const cars = await Car.find({ location, isAvailable: true });
@@ -178,17 +198,34 @@ export const changeBookingStatus = async (req, res) => {
 /** Get all bookings for today */
 export const getTodayBookings = async (req, res) => {
   try {
-    // Get today's date range
+    // Get today's date in UTC (start and end)
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999);
+    const startOfToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      0,
+      0,
+      0,
+      0,
+    );
+    const endOfToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+      999,
+    );
 
     // Find all bookings that overlap with today
+    // A booking overlaps today if: pickupDate <= endOfToday AND returnDate >= startOfToday
     const bookings = await Booking.find({
       pickupDate: { $lte: endOfToday },
-      returnDate: { $gte: today },
+      returnDate: { $gt: startOfToday },
       status: { $ne: "cancelled" },
+      paymentStatus: "completed", // Only count confirmed/paid bookings
     }).select("car");
 
     res.json({ success: true, bookings });
@@ -203,6 +240,21 @@ export const createPaymentIntent = async (req, res) => {
     const { _id } = req.user;
     const { car, pickupDate, returnDate } = req.body;
 
+    // Validate dates
+    const picked = new Date(pickupDate + "T00:00:00Z");
+    const returned = new Date(returnDate + "T00:00:00Z");
+
+    if (isNaN(picked) || isNaN(returned)) {
+      return res.json({ success: false, message: "Invalid date format" });
+    }
+
+    if (returned <= picked) {
+      return res.json({
+        success: false,
+        message: "Return date must be after pickup date",
+      });
+    }
+
     // Verify car availability
     if (!(await checkAvailability(car, pickupDate, returnDate))) {
       return res.json({ success: false, message: "Car Not Available" });
@@ -214,9 +266,7 @@ export const createPaymentIntent = async (req, res) => {
       return res.json({ success: false, message: "Car not found" });
     }
 
-    // Calculate price
-    const picked = new Date(pickupDate);
-    const returned = new Date(returnDate);
+    // Calculate price (days between dates)
     const days = Math.max(
       Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)),
       1,
@@ -254,6 +304,21 @@ export const confirmPayment = async (req, res) => {
     const { _id } = req.user;
     const { car, pickupDate, returnDate, stripePaymentIntentId } = req.body;
 
+    // Validate dates
+    const picked = new Date(pickupDate + "T00:00:00Z");
+    const returned = new Date(returnDate + "T00:00:00Z");
+
+    if (isNaN(picked) || isNaN(returned)) {
+      return res.json({ success: false, message: "Invalid date format" });
+    }
+
+    if (returned <= picked) {
+      return res.json({
+        success: false,
+        message: "Return date must be after pickup date",
+      });
+    }
+
     // Verify car availability
     if (!(await checkAvailability(car, pickupDate, returnDate))) {
       return res.json({ success: false, message: "Car Not Available" });
@@ -273,21 +338,20 @@ export const confirmPayment = async (req, res) => {
 
     // Get car data
     const carData = await Car.findById(car);
-    const picked = new Date(pickupDate);
-    const returned = new Date(returnDate);
+
     const days = Math.max(
       Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)),
       1,
     );
     const price = days * carData.pricePerDay;
 
-    // Create booking with payment completed but pending owner confirmation
+    // Create booking - store dates as Date objects
     const booking = await Booking.create({
       car,
       user: _id,
       owner: carData.owner,
-      pickupDate,
-      returnDate,
+      pickupDate: picked, // Store as Date object
+      returnDate: returned, // Store as Date object
       price,
       status: "pending", // Pending owner confirmation
       paymentStatus: "completed",

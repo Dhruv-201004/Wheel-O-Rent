@@ -29,7 +29,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <div className="!py-28 !px-6 md:!px-16 lg:!px-24 xl:!px-44">
+    <div className="!py-12 sm:!py-20 md:!py-28 !px-4 sm:!px-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32">
       {/* Section title */}
       <Title
         title="What Our Customers Say"
@@ -37,7 +37,7 @@ const Testimonials = () => {
       />
 
       {/* Testimonials grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 !mt-18">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 !mt-10 md:!mt-18">
         {testimonials.map((testimonial, index) => (
           <motion.div
             // Card animation with staggered delay
@@ -46,12 +46,12 @@ const Testimonials = () => {
             transition={{ duration: 0.6, delay: index * 0.2, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
             key={index}
-            className="bg-white !p-6 rounded-xl shadow-lg hover:-translate-y-1 transition-all duration-500"
+            className="bg-white !p-4 sm:!p-5 md:!p-6 rounded-xl shadow-lg hover:-translate-y-1 transition-all duration-500"
           >
             {/* User profile */}
             <div className="flex items-center gap-3">
               <img
-                className="w-12 h-12 rounded-full"
+                className="w-10 sm:w-12 h-10 sm:h-12 rounded-full"
                 src={testimonial.image}
                 alt={testimonial.name}
               />
@@ -71,7 +71,7 @@ const Testimonials = () => {
             </div>
 
             {/* Testimonial text */}
-            <p className="text-gray-500 max-w-90 !mt-4 font-light">
+            <p className="text-gray-500 !mt-3 md:!mt-4 font-light text-sm md:text-base">
               "{testimonial.testimonial}"
             </p>
           </motion.div>
