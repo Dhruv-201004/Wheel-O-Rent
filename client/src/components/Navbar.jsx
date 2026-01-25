@@ -35,10 +35,27 @@ const Navbar = () => {
     }
   };
 
+  // Switch user role to owner
+  const handleListCars = () => {
+    if (token) {
+      navigate("/owner");
+    } else {
+      toast.error("Please LogIn first");
+    }
+  };
+
   // Filter menu links based on login status
   const filteredMenuLinks = token
     ? menuLinks
     : menuLinks.filter((link) => link.name === "Home" || link.name === "Cars");
+
+  // Add List Your Cars link for non-logged-in users
+  const displayLinks = !token
+    ? [
+        ...filteredMenuLinks,
+        { name: "List Your Cars", path: "#", isAction: true },
+      ]
+    : filteredMenuLinks;
 
   return (
     <motion.div
@@ -63,14 +80,24 @@ const Navbar = () => {
         !right-0 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 max-sm:!p-4 bg-light transition-all duration-300 z-50 
         ${open ? "max-sm:translate-x-0" : "max-sm:translate-x-full"}`}
       >
-        {filteredMenuLinks.map((link, index) => (
-          <Link
-            key={index}
-            to={link.path}
-            className="text-gray-700 hover:text-gray-900"
-          >
-            {link.name}
-          </Link>
+        {displayLinks.map((link, index) => (
+          link.isAction ? (
+            <button
+              key={index}
+              onClick={handleListCars}
+              className="text-gray-700 hover:text-gray-900 cursor-pointer"
+            >
+              {link.name}
+            </button>
+          ) : (
+            <Link
+              key={index}
+              to={link.path}
+              className="text-gray-700 hover:text-gray-900"
+            >
+              {link.name}
+            </Link>
+          )
         ))}
 
         {/* Role Action + Auth Button */}
@@ -118,20 +145,20 @@ const Navbar = () => {
               {isOwner ? "Dashboard" : "List Cars"}
             </button>
           )}
+          {!token && (
+            <button
+              onClick={() => setShowLogin(true)}
+              className="cursor-pointer !px-8 !py-2 bg-primary hover:bg-primary-dull transition-all rounded-lg text-white"
+            >
+              Login
+            </button>
+          )}
           {user && (
             <button
               onClick={logout}
               className="cursor-pointer !px-6 !py-2 bg-red-500 hover:bg-red-600 transition-all rounded-lg text-white text-sm font-medium"
             >
               Logout
-            </button>
-          )}
-          {!user && (
-            <button
-              onClick={() => setShowLogin(true)}
-              className="cursor-pointer !px-8 !py-2 bg-primary hover:bg-primary-dull transition-all rounded-lg text-white"
-            >
-              Login
             </button>
           )}
         </div>
