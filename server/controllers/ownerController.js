@@ -92,6 +92,8 @@ export const addCar = async (req, res) => {
     });
 
     await Car.create({ ...car, owner: _id, image });
+    // Automatically set user role to owner when they add a car
+    await User.findByIdAndUpdate(_id, { role: "owner" });
     res.json({ success: true, message: "Car Added" });
   } catch (error) {
     res.json({ success: false, message: error.message });

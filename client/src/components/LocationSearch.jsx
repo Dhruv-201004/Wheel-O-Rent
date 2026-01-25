@@ -135,7 +135,7 @@ const LocationSearch = ({
         }}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full !p-2 border rounded-md outline-none focus:border-primary text-sm"
+        className="w-full !px-3 md:!px-4 !py-2 md:!py-2.5 border border-gray-300 rounded-lg md:rounded-md outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-xs md:text-sm text-gray-700 transition-all"
       />
 
       {/* Loading indicator */}

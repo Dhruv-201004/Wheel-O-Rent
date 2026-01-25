@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Title from "../../components/owner/Title";
 import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
@@ -6,6 +7,7 @@ import toast from "react-hot-toast";
 import LocationInput from "../../components/owner/LocationInput";
 
 const AddCar = () => {
+  const navigate = useNavigate();
   const { axios, currency } = useAppContext();
   const [image, setImage] = useState(null);
   const locationInputRef = useRef(null);
@@ -58,6 +60,7 @@ const AddCar = () => {
           location: "",
           description: "",
         });
+        navigate("/owner/manage-cars");
       } else {
         toast.error(data.message);
       }

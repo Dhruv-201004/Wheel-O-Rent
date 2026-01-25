@@ -52,10 +52,10 @@ const ManageCars = () => {
     }
   };
 
-  // Fetch cars when component mounts and owner is authenticated
+  // Fetch cars when component mounts
   useEffect(() => {
-    isOwner && fetchOwnerCars();
-  }, [isOwner]);
+    fetchOwnerCars();
+  }, []);
 
   return (
     <div className="!px-4 !py-8 md:!px-10 w-full bg-gray-50/50">

@@ -64,77 +64,101 @@ const Hero = () => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.4 }}
         onSubmit={handleSearch}
-        className="flex flex-col md:flex-row items-start md:items-center justify-between !p-4 sm:!p-6 rounded-lg md:rounded-full w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-5xl bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]"
+        className="flex flex-col gap-4 !p-4 sm:!p-6 rounded-lg md:rounded-2xl w-full max-w-sm sm:max-w-2xl md:max-w-4xl lg:max-w-5xl bg-white shadow-[0px_8px_20px_rgba(0,0,0,0.1)]"
       >
-        {/* Location and date inputs */}
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full md:w-auto md:ml-4 lg:ml-8">
-          {/* Pickup location search */}
-          <div className="flex flex-col items-start gap-1 w-full sm:w-auto">
-            <label className="text-xs md:text-sm font-medium text-gray-700 hidden md:block">
-              Location
-            </label>
-            <LocationSearch
-              value={pickupLocation}
-              onChange={setPickupLocation}
-              placeholder="Search location..."
-            />
-            <p className="!px-1 text-xs text-gray-500 mt-1">
-              {pickupLocation ? pickupLocation : "Select location"}
-            </p>
-          </div>
-
-          {/* Pickup date input */}
-          <div className="flex flex-col items-start gap-1 w-full sm:w-auto">
-            <label
-              htmlFor="pickup-date"
-              className="text-xs md:text-sm font-medium text-gray-700"
-            >
-              Pick-up
-            </label>
-            <input
-              value={pickupDate}
-              onChange={(e) => setPickupDate(e.target.value)}
-              type="date"
-              id="pickup-date"
-              min={new Date().toISOString().split("T")[0]}
-              className="text-xs md:text-sm text-gray-500 px-2 py-1 border rounded"
-              required
-            />
-          </div>
-
-          {/* Return date input */}
-          <div className="flex flex-col items-start gap-1 w-full sm:w-auto">
-            <label
-              htmlFor="return-date"
-              className="text-xs md:text-sm font-medium text-gray-700"
-            >
-              Return
-            </label>
-            <input
-              value={returnDate}
-              min={pickupDate}
-              onChange={(e) => setReturnDate(e.target.value)}
-              type="date"
-              id="return-date"
-              className="text-xs md:text-sm text-gray-500 px-2 py-1 border rounded"
-              required
-            />
-          </div>
+        {/* Labels row */}
+        <div className="hidden md:flex gap-8 lg:gap-10">
+          <label className="text-xs md:text-sm font-medium text-gray-700 w-48">
+            Location
+          </label>
+          <label
+            htmlFor="pickup-date"
+            className="text-xs md:text-sm font-medium text-gray-700 w-40"
+          >
+            Pick-up
+          </label>
+          <label
+            htmlFor="return-date"
+            className="text-xs md:text-sm font-medium text-gray-700 w-40"
+          >
+            Return
+          </label>
         </div>
 
-        {/* Search button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center justify-center gap-1 !px-6 sm:!px-9 !py-2 sm:!py-3 !mt-4 md:!mt-0 bg-primary hover:bg-primary-dull text-white rounded-full w-full md:w-auto cursor-pointer text-sm md:text-base"
-        >
-          <img
-            src={assets.search_icon}
-            alt="search"
-            className="brightness-300 h-4 md:h-5"
-          />
-          Search
-        </motion.button>
+        {/* Inputs row and button */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 sm:gap-6">
+          {/* Location and date inputs container */}
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 w-full md:w-auto flex-1">
+            {/* Pickup location search */}
+            <div className="flex flex-col items-start gap-2 w-full sm:w-auto">
+              <label className="text-xs md:text-sm font-medium text-gray-700 md:hidden">
+                Location
+              </label>
+              <LocationSearch
+                value={pickupLocation}
+                onChange={setPickupLocation}
+                placeholder="Search location..."
+              />
+            </div>
+
+            {/* Pickup date input */}
+            <div className="flex flex-col items-start gap-2 w-full sm:w-auto">
+              <label
+                htmlFor="pickup-date"
+                className="text-xs md:text-sm font-medium text-gray-700 md:hidden"
+              >
+                Pick-up
+              </label>
+              <input
+                value={pickupDate}
+                onChange={(e) => setPickupDate(e.target.value)}
+                type="date"
+                id="pickup-date"
+                min={new Date().toISOString().split("T")[0]}
+                className="w-full sm:w-auto text-xs md:text-sm text-gray-700 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg md:rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                required
+              />
+            </div>
+
+            {/* Return date input */}
+            <div className="flex flex-col items-start gap-2 w-full sm:w-auto">
+              <label
+                htmlFor="return-date"
+                className="text-xs md:text-sm font-medium text-gray-700 md:hidden"
+              >
+                Return
+              </label>
+              <input
+                value={returnDate}
+                min={pickupDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+                type="date"
+                id="return-date"
+                className="w-full sm:w-auto text-xs md:text-sm text-gray-700 px-3 md:px-4 py-2 md:py-2.5 border border-gray-300 rounded-lg md:rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Search button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center justify-center gap-1 !px-6 sm:!px-9 !py-2 md:!py-2.5 bg-primary hover:bg-primary-dull text-white rounded-full w-full md:w-auto cursor-pointer text-sm md:text-base flex-shrink-0"
+          >
+            <img
+              src={assets.search_icon}
+              alt="search"
+              className="brightness-300 h-4 md:h-5"
+            />
+            Search
+          </motion.button>
+        </div>
+
+        {/* Select location text below */}
+        <p className="!px-1 text-xs text-gray-500 md:hidden">
+          {pickupLocation ? pickupLocation : "Select location"}
+        </p>
       </motion.form>
 
       {/* Hero car image */}

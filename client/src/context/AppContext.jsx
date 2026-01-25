@@ -20,6 +20,7 @@ export const AppProvider = ({ children }) => {
   const [pickupDate, setPickupDate] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [cars, setCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Fetch authenticated user details
   const fetchUser = async () => {
@@ -70,14 +71,29 @@ export const AppProvider = ({ children }) => {
       setToken(storedToken);
       axios.defaults.headers.common["Authorization"] = storedToken;
     }
+    setIsLoading(false);
   }, []);
 
   // Fetch user and cars once token is available
   useEffect(() => {
+    let isMounted = true;
+
     if (token) {
-      fetchUser();
-      fetchCars();
+      fetchUser().catch((err) => {
+        if (isMounted) {
+          console.error("Error fetching user:", err);
+        }
+      });
+      fetchCars().catch((err) => {
+        if (isMounted) {
+          console.error("Error fetching cars:", err);
+        }
+      });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [token]);
 
   // Context value to be shared across the app
@@ -104,6 +120,7 @@ export const AppProvider = ({ children }) => {
     logout,
     fetchCars,
     fetchUser,
+    isLoading,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -4,6 +4,44 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SEC_KEY);
 
+/** Process auto-refunds for pending bookings past pickup date */
+export const processAutoRefunds = async () => {
+  try {
+    const now = new Date();
+
+    // Find all pending bookings where pickup date has passed
+    const expiredBookings = await Booking.find({
+      status: "pending",
+      paymentStatus: "completed",
+      pickupDate: { $lt: now },
+      stripePaymentIntentId: { $exists: true },
+    });
+
+    for (const booking of expiredBookings) {
+      try {
+        // Create refund via Stripe
+        const refund = await stripe.refunds.create({
+          payment_intent: booking.stripePaymentIntentId,
+        });
+
+        if (refund.status === "succeeded" || refund.status === "pending") {
+          booking.paymentStatus = "refunded";
+          booking.status = "cancelled";
+          await booking.save();
+          console.log(`Auto-refund processed for booking ${booking._id}`);
+        }
+      } catch (error) {
+        console.error(
+          `Auto-refund failed for booking ${booking._id}:`,
+          error.message,
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error in processAutoRefunds:", error);
+  }
+};
+
 /** Check if a car is available for a given date range */
 export const checkAvailability = async (car, pickupDate, returnDate) => {
   // Convert string dates (YYYY-MM-DD) to Date objects at start of day (UTC)
@@ -117,10 +155,6 @@ export const getUserBookings = async (req, res) => {
 /** Get bookings for cars owned by the logged-in owner */
 export const getOwnerBookings = async (req, res) => {
   try {
-    if (req.user.role !== "owner") {
-      return res.json({ success: false, message: "Unauthorized" });
-    }
-
     const bookings = await Booking.find({
       owner: req.user._id,
       paymentStatus: "completed", // Only show bookings with completed payment

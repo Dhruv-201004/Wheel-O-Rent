@@ -36,10 +36,10 @@ const Navbar = () => {
     }
   };
 
-  // Switch user role to owner
+  // Navigate to add car page
   const handleListCars = () => {
     if (token) {
-      navigate("/owner");
+      navigate("/owner/add-car");
     } else {
       toast.error("Please LogIn first");
     }
@@ -50,13 +50,12 @@ const Navbar = () => {
     ? menuLinks
     : menuLinks.filter((link) => link.name === "Home" || link.name === "Cars");
 
-  // Add List Your Cars link for non-logged-in users
-  const displayLinks = !token
-    ? [
-        ...filteredMenuLinks,
-        { name: "List Your Cars", path: "#", isAction: true },
-      ]
-    : filteredMenuLinks;
+  // Add List Your Cars link after Cars
+  const displayLinks = [
+    ...filteredMenuLinks.slice(0, 2), // Home and Cars
+    { name: "List your Car", path: "#", isAction: true },
+    ...filteredMenuLinks.slice(2), // My Bookings (only for logged-in users)
+  ];
 
   return (
     <motion.div
@@ -172,30 +171,28 @@ const Navbar = () => {
                       My Profile
                     </button>
 
-                    {isOwner && (
-                      <button
-                        onClick={() => {
-                          navigate("/owner");
-                          setProfileDropdown(false);
-                        }}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
+                    <button
+                      onClick={() => {
+                        navigate("/owner");
+                        setProfileDropdown(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 7h12M8 11h12m-12 4h12m2-12H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z"
-                          />
-                        </svg>
-                        My Dashboard
-                      </button>
-                    )}
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M8 7h12M8 11h12m-12 4h12m2-12H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z"
+                        />
+                      </svg>
+                      Dashboard
+                    </button>
                   </div>
 
                   <div className="border-t border-gray-200 py-2">

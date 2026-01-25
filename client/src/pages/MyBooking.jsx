@@ -212,11 +212,11 @@ const MyBooking = () => {
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 !p-6 bg-white">
                         {/* Car image and basic info */}
                         <div className="md:col-span-1">
-                          <div className="rounded-md overflow-hidden !mb-3 relative">
+                          <div className="rounded-md overflow-hidden !mb-3 relative bg-white">
                             <img
                               src={booking.car.image}
                               alt="Car"
-                              className="w-full h-auto aspect-video object-cover hover:scale-105 transition-transform duration-300"
+                              className="w-full h-auto aspect-video object-cover hover:scale-105 transition-transform duration-300 brightness-100"
                             />
                             {isUpcoming && (
                               <div className="absolute top-2 right-2 bg-blue-500 text-white !px-2 !py-1 rounded text-xs font-semibold">
