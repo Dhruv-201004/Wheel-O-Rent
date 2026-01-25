@@ -19,8 +19,10 @@ import { useAppContext } from "./context/AppContext";
 
 const App = () => {
   const { showLogin, isAdmin, user } = useAppContext();
-  const isOwnerPath = useLocation().pathname.startsWith("/owner");
-  const isAdminPath = useLocation().pathname.startsWith("/admin");
+  const location = useLocation();
+  const isOwnerPath = location.pathname.startsWith("/owner");
+  const isAdminPath = location.pathname.startsWith("/admin");
+  const isProfilePath = location.pathname === "/profile";
   const navigate = useNavigate();
 
   // If admin is logged in and not on admin page, redirect to admin
@@ -35,7 +37,7 @@ const App = () => {
       <Toaster />
       {showLogin && <Login />}
 
-      {!isOwnerPath && !isAdminPath && <Navbar />}
+      {!isOwnerPath && !isAdminPath && !isProfilePath && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -51,7 +53,7 @@ const App = () => {
         </Route>
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
-      {!isOwnerPath && !isAdminPath && <Footer />}
+      {!isOwnerPath && !isAdminPath && !isProfilePath && <Footer />}
     </>
   );
 };

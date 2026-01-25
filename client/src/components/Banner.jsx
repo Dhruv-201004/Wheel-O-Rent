@@ -3,17 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import toast from "react-hot-toast";
 
 // Promotional banner for car owners
 const Banner = () => {
   const navigate = useNavigate();
-  const { token, setShowLogin } = useContext(AppContext);
+  const { token } = useContext(AppContext);
 
   const handleListCar = () => {
     if (token) {
-      navigate("/owner/dashboard");
+      navigate("/owner");
     } else {
-      setShowLogin(true);
+      toast.error("Please LogIn first");
     }
   };
 
