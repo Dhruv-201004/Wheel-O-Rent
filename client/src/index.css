@@ -1,6 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Martel+Sans:wght@200;300;400;600;700;800;900&family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
 
+/* Responsive font size adjustments */
+@layer base {
+  body {
+    @apply text-sm md:text-base;
+  }
+
+  /* Mobile first responsive images */
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Responsive container padding */
+  .container {
+    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+  }
+}
+
 * {
   font-family: "Outfit", sans-serif;
 }
@@ -10,4 +27,54 @@
   --color-primary-dull: #1f58d8;
   --color-light: #f1f5f9;
   --color-borderColor: #c4c7d2;
+}
+
+/* Custom responsive utilities */
+@layer utilities {
+  /* Responsive text utilities */
+  .text-responsive {
+    @apply text-sm sm:text-base md:text-lg lg:text-xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  /* Responsive spacing utilities */
+  .px-responsive {
+    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+  }
+
+  .py-responsive {
+    @apply py-6 sm:py-8 md:py-12 lg:py-16;
+  }
+
+  /* Responsive padding utilities */
+  .p-responsive {
+    @apply p-3 sm:p-4 md:p-5 lg:p-6;
+  }
+
+  /* Responsive gap utilities */
+  .gap-responsive {
+    @apply gap-2 sm:gap-3 md:gap-4 lg:gap-6;
+  }
+
+  /* Responsive width utilities */
+  .w-responsive {
+    @apply w-full sm:w-auto;
+  }
+}
+
+/* Mobile-first responsive breakpoints helper */
+@media (max-width: 640px) {
+  /* Mobile optimizations */
+  .hide-on-mobile {
+    @apply hidden;
+  }
+}
+
+@media (min-width: 641px) {
+  .show-on-mobile {
+    @apply hidden;
+  }
 }

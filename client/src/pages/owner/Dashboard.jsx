@@ -57,37 +57,37 @@ const Dashboard = () => {
   }, [isOwner]);
 
   return (
-    <div className="!px-4 !py-8 md:!px-10 flex-1 bg-gray-50/50">
+    <div className="!px-3 sm:!px-6 md:!px-8 lg:!px-10 !py-6 md:!py-8 flex-1 bg-gray-50/50 min-h-screen overflow-x-hidden">
       <Title
         title="Owner Dashboard"
         subTitle="Monitor overall platform performance including total cars, bookings, revenue and recent activities"
       />
 
       {/* Summary cards */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 !my-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 !my-6 md:!my-8">
         {dashboardCards.map((card, index) => (
           <div
             key={index}
             className="flex gap-4 items-center justify-between !p-5 rounded-xl border border-borderColor bg-white shadow-sm hover:shadow-md transition-shadow duration-200"
           >
             <div>
-              <h1 className="text-xs text-gray-500 uppercase tracking-wide">
+              <h1 className="text-xs md:text-sm text-gray-500 uppercase tracking-wide">
                 {card.title}
               </h1>
-              <p className="text-2xl font-bold text-gray-800 !mt-1">
+              <p className="text-xl md:text-2xl font-bold text-gray-800 !mt-1">
                 {card.value}
               </p>
             </div>
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10">
+            <div className="flex items-center justify-center w-10 md:w-12 h-10 md:h-12 rounded-xl bg-primary/10">
               <img src={card.icon} alt="" className="h-5 w-5" />
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex flex-wrap items-start gap-6 !mb-8 w-full">
+      <div className="flex flex-col lg:flex-row items-start gap-4 md:gap-6 !mb-8 w-full">
         {/* Recent Bookings */}
-        <div className="!p-5 md:!p-6 border border-borderColor rounded-xl bg-white shadow-sm flex-1 min-w-[320px]">
+        <div className="!p-4 md:!p-5 lg:!p-6 border border-borderColor rounded-xl bg-white shadow-sm flex-1 w-full min-w-0">
           <div className="!mb-4">
             <h1 className="text-lg font-semibold text-gray-800">
               Recent Bookings
@@ -162,7 +162,7 @@ const Dashboard = () => {
         </div>
 
         {/* Monthly Revenue */}
-        <div className="!p-5 md:!p-6 border border-borderColor rounded-xl bg-white shadow-sm w-full md:max-w-xs">
+        <div className="!p-4 md:!p-5 lg:!p-6 border border-borderColor rounded-xl bg-white shadow-sm w-full lg:max-w-xs">
           <h1 className="text-lg font-semibold text-gray-800">
             Monthly Revenue
           </h1>

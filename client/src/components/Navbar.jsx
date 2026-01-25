@@ -63,15 +63,15 @@ const Navbar = () => {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex items-center justify-between !px-6 md:!px-16 lg:!px-24 xl:!px-32 !py-2 text-gray-600 border-b border-borderColor relative bg-light"
+      className="flex items-center justify-between !px-4 sm:!px-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32 !py-2 text-gray-600 border-b border-borderColor relative bg-light"
     >
       {/* Logo */}
-      <Link to="/">
+      <Link to="/" className="flex-shrink-0">
         <motion.img
           whileHover={{ scale: 1.05 }}
           src={assets.logo}
           alt="Logo"
-          className="h-16"
+          className="h-12 sm:h-14 md:h-16"
         />
       </Link>
 

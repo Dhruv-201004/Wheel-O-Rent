@@ -38,9 +38,22 @@ const CarDetails = () => {
       return;
     }
 
+    // Parse dates
+    const picked = new Date(pickupDate + "T00:00:00Z");
+    const returned = new Date(returnDate + "T00:00:00Z");
+
+    if (isNaN(picked) || isNaN(returned)) {
+      toast.error("Invalid date format");
+      return;
+    }
+
+    // Validate return date is after pickup date
+    if (returned <= picked) {
+      toast.error("Return date must be after pickup date");
+      return;
+    }
+
     // Calculate price and days
-    const picked = new Date(pickupDate);
-    const returned = new Date(returnDate);
     const days = Math.max(
       Math.ceil((returned - picked) / (1000 * 60 * 60 * 24)),
       1,
@@ -96,7 +109,7 @@ const CarDetails = () => {
   }, [id, cars, axios, navigate]);
 
   return !isLoading && car ? (
-    <div className="!px-16 md:!px-16 lg:!px-24 xl:!px-32 !mt-16 ">
+    <div className="!px-4 sm:!px-6 md:!px-8 lg:!px-16 xl:!px-24 2xl:!px-32 !mt-8 sm:!mt-12 md:!mt-16">
       {/* Back navigation */}
       <button
         onClick={() => navigate(-1)}
@@ -142,7 +155,7 @@ const CarDetails = () => {
             <hr className="border border-borderColor !my-6" />
 
             {/* Car specifications */}
-            <div className="grid grid-cols-2 sma:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
               {[
                 {
                   icon: assets.users_icon,
@@ -231,7 +244,7 @@ const CarDetails = () => {
               className="border border-borderColor !px-3 !py-2 rounded-lg"
               required
               id="return_date"
-              min={new Date().toISOString().split("T")[0]}
+              min={pickupDate || new Date().toISOString().split("T")[0]}
             />
           </div>
 

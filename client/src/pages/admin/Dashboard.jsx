@@ -237,18 +237,18 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
       {/* Header */}
       <div className="bg-white shadow-md sticky top-0 z-10 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+        <div className="max-w-7xl mx-auto !px-3 sm:!px-6 lg:!px-8 !py-4 sm:!py-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center flex-shrink-0">
               <svg
-                className="w-6 h-6 text-white"
+                className="w-5 sm:w-6 h-5 sm:h-6 text-white"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+            <h1 className="text-xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
               Admin Dashboard
             </h1>
           </div>
@@ -257,7 +257,7 @@ export default function Dashboard() {
               logout();
               navigate("/");
             }}
-            className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105"
+            className="!px-4 sm:!px-6 !py-2 text-sm sm:text-base bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-300 shadow-sm hover:shadow-md transform hover:scale-105 w-full sm:w-auto"
           >
             Logout
           </button>
